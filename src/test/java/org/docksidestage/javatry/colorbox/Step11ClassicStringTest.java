@@ -15,8 +15,13 @@
  */
 package org.docksidestage.javatry.colorbox;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
+import ch.qos.logback.core.joran.util.StringToObjectConverter;
 import org.docksidestage.bizfw.colorbox.ColorBox;
 import org.docksidestage.bizfw.colorbox.color.BoxColor;
 import org.docksidestage.bizfw.colorbox.space.BoxSpace;
@@ -307,6 +312,19 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスに入ってる "o" (おー) を含んだ文字列から "o" を全て除去したら何文字？)
      */
     public void test_replace_remove_o() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        int answer = 0;
+        for (ColorBox box : colorBoxList) {
+            List<BoxSpace> spaceList = box.getSpaceList();
+            for (BoxSpace boxSpace : spaceList) {
+                Object content = boxSpace.getContent();
+                if (content instanceof String) {
+                    answer += ((String) content).replaceAll("o", "").length();
+                }
+            }
+        }
+        log(answer != 0 ? answer : "not found color-box");
+
     }
 
     /**
@@ -314,6 +332,19 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * カラーボックスに入ってる java.io.File のパス文字列のファイルセパレーターの "/" を、Windowsのファイルセパレーターに置き換えた文字列は？
      */
     public void test_replace_fileseparator() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String answer = "";
+        for (ColorBox box : colorBoxList) {
+            List<BoxSpace> spaceList = box.getSpaceList();
+            for (BoxSpace boxSpace : spaceList) {
+                Object content = boxSpace.getContent();
+                if (content instanceof File) {
+                    answer = content.toString().replaceFirst("/", "C:");
+                }
+            }
+        }
+        log(!answer.equals("") ? answer : "not found color-box");
+
     }
 
     // ===================================================================================
@@ -324,6 +355,19 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスの中に入っているDevilBoxクラスのtextの長さの合計は？)
      */
     public void test_welcomeToDevil() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        int answer = 0;
+        for (ColorBox box : colorBoxList) {
+            List<BoxSpace> spaceList = box.getSpaceList();
+            for (BoxSpace boxSpace : spaceList) {
+                Object content = boxSpace.getContent();
+                if (content instanceof YourPrivateRoom.DevilBox) {
+                    answer += content.toString().length();
+
+                }
+            }
+        }
+        log(answer != 0 ? answer : "not found color-box");
     }
 
     // ===================================================================================
@@ -334,6 +378,18 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = value ; ... }" という形式で表示すると？)
      */
     public void test_showMap() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        Map<String, Integer> answer = new HashMap<String, Integer>();
+        for (ColorBox box : colorBoxList) {
+            List<BoxSpace> spaceList = box.getSpaceList();
+            for (BoxSpace boxSpace : spaceList) {
+                Object content = boxSpace.getContent();
+                if (content instanceof Map) {
+                    answer.putAll((HashMap) content);
+                }
+            }
+        }
+        log(answer);
     }
 
     /**
@@ -341,12 +397,41 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (whiteのカラーボックスのupperスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
     public void test_parseMap_basic() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        Map<String, Integer> answer = new HashMap<String, Integer>();
+        for (ColorBox box : colorBoxList) {
+            if (box.getColor().getColorName().equals("white")) {
+                List<BoxSpace> spaceList = box.getSpaceList();
+                Object content = spaceList.get(0).getContent(); //upperスペース?
+                if (content instanceof YourPrivateRoom.SecretBox) {
+                    log(((YourPrivateRoom.SecretBox) content).getText());
+                }
+            }
+        }
+        //        log(answer);
     }
+
+    // String -> Mapのメソッドを作成しましょう
 
     /**
      * What string of toString() is converted from text of SecretBox class in both middle and lower spaces on the "white" color-box to java.util.Map? <br>
      * (whiteのカラーボックスのmiddleおよびlowerスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
     public void test_parseMap_deep() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        Map<String, Integer> answer = new HashMap<String, Integer>();
+        for (ColorBox box : colorBoxList) {
+            if (box.getColor().getColorName().equals("white")) {
+                List<BoxSpace> spaceList = box.getSpaceList();
+                Object content = spaceList.get(1).getContent();
+                if (content instanceof YourPrivateRoom.SecretBox) {
+                    log(((YourPrivateRoom.SecretBox) content).getText());
+                }
+                content = spaceList.get(2).getContent();
+                if (content instanceof YourPrivateRoom.SecretBox) {
+                    log(((YourPrivateRoom.SecretBox) content).getText());
+                }
+            }
+        }
     }
 }
