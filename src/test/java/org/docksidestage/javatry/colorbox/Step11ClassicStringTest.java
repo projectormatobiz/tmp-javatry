@@ -381,25 +381,6 @@ public class Step11ClassicStringTest extends PlainTestCase {
     // ===================================================================================
     //                                                                           Challenge
     //                                                                           =========
-    /**
-     * What string is converted to style "map:{ key = value ; key = value ; ... }" from java.util.Map in color-boxes? <br>
-     * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = value ; ... }" という形式で表示すると？)
-     */
-    public void test_showMap() {
-        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        Map<String, Integer> answer = new HashMap<String, Integer>();
-        for (ColorBox box : colorBoxList) {
-            List<BoxSpace> spaceList = box.getSpaceList();
-            for (BoxSpace boxSpace : spaceList) {
-                Object content = boxSpace.getContent();
-                if (content instanceof Map) {
-                    log("map:" + content);
-                    answer.putAll((Map) content);
-                }
-            }
-        }
-        log(answer);
-    }
 
     /**
      *
@@ -422,7 +403,25 @@ public class Step11ClassicStringTest extends PlainTestCase {
         }
         return map;
     }
+
+    /**
+     * What string is converted to style "map:{ key = value ; key = value ; ... }" from java.util.Map in color-boxes? <br>
+     * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = value ; ... }" という形式で表示すると？)
+     */
     public void test_showMap_flat() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        Map<String, Integer> answer = new HashMap<String, Integer>();
+        for (ColorBox box : colorBoxList) {
+            List<BoxSpace> spaceList = box.getSpaceList();
+            for (BoxSpace boxSpace : spaceList) {
+                Object content = boxSpace.getContent();
+                if (content instanceof Map) {
+                    log("map:" + content);
+                    answer.putAll((Map) content);
+                }
+            }
+        }
+        log(answer);
     }
 
     /**
@@ -439,7 +438,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * What string of toString() is converted from text of SecretBox class in upper space on the "white" color-box to java.util.Map? <br>
      * (whiteのカラーボックスのupperスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
-    public void test_parseMap_basic() throws IOException {
+    public void test_parseMap_flat() throws IOException {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         Map<String, String> answer = new HashMap<String, String>();
         for (ColorBox box : colorBoxList) {
@@ -458,16 +457,12 @@ public class Step11ClassicStringTest extends PlainTestCase {
         }
         //        log(answer);
     }
-    public void test_parseMap_flat() {
-    }
-
-    // String -> Mapのメソッドを作成しましょう
 
     /**
      * What string of toString() is converted from text of SecretBox class in both middle and lower spaces on the "white" color-box to java.util.Map? <br>
      * (whiteのカラーボックスのmiddleおよびlowerスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
-    public void test_parseMap_deep() throws IOException {
+    public void test_parseMap_nested() throws IOException {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         Map<String, Integer> answer = new HashMap<String, Integer>();
         for (ColorBox box : colorBoxList) {
@@ -489,6 +484,5 @@ public class Step11ClassicStringTest extends PlainTestCase {
             }
         }
     }
-    public void test_parseMap_nested() {
-    }
+    
 }
