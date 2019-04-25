@@ -15,7 +15,10 @@
  */
 package org.docksidestage.javatry.colorbox;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -385,7 +388,8 @@ public class Step11ClassicStringTest extends PlainTestCase {
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof Map) {
-                    answer.putAll((HashMap) content);
+                    log("map:" + content);
+                    answer.putAll((Map) content);
                 }
             }
         }
@@ -393,18 +397,45 @@ public class Step11ClassicStringTest extends PlainTestCase {
     }
 
     /**
+     *
+     * @param string
+     * @return Map<String, String>
+     * @throws IOException
+     */
+    public Map StringToMap(String string) throws IOException {
+        BufferedReader reader = new BufferedReader(new StringReader(string));
+        Map<String, String> map = new HashMap<String, String>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            int index = line.indexOf("=");
+            if (index == -1) {
+                throw new IllegalArgumentException();
+            }
+            String key = line.substring(0, index);
+            String value = line.substring(index + 1);
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    /**
      * What string of toString() is converted from text of SecretBox class in upper space on the "white" color-box to java.util.Map? <br>
      * (whiteのカラーボックスのupperスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
-    public void test_parseMap_basic() {
+    public void test_parseMap_basic() throws IOException {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        Map<String, Integer> answer = new HashMap<String, Integer>();
+        Map<String, String> answer = new HashMap<String, String>();
         for (ColorBox box : colorBoxList) {
             if (box.getColor().getColorName().equals("white")) {
                 List<BoxSpace> spaceList = box.getSpaceList();
                 Object content = spaceList.get(0).getContent(); //upperスペース?
                 if (content instanceof YourPrivateRoom.SecretBox) {
-                    log(((YourPrivateRoom.SecretBox) content).getText());
+                    String currnet = ((YourPrivateRoom.SecretBox) content).getText();
+                    //正規表現で{}消す
+                    currnet = currnet.replaceFirst("map:", "");
+                    answer = StringToMap(currnet);
+                    log(answer);
+
                 }
             }
         }
@@ -417,7 +448,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * What string of toString() is converted from text of SecretBox class in both middle and lower spaces on the "white" color-box to java.util.Map? <br>
      * (whiteのカラーボックスのmiddleおよびlowerスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
      */
-    public void test_parseMap_deep() {
+    public void test_parseMap_deep() throws IOException {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         Map<String, Integer> answer = new HashMap<String, Integer>();
         for (ColorBox box : colorBoxList) {
@@ -426,6 +457,11 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 Object content = spaceList.get(1).getContent();
                 if (content instanceof YourPrivateRoom.SecretBox) {
                     log(((YourPrivateRoom.SecretBox) content).getText());
+                    String currnet = ((YourPrivateRoom.SecretBox) content).getText();
+                    currnet = currnet.replaceFirst("map:", "");
+                    log(currnet);
+                    answer = StringToMap(currnet);
+                    log(answer);
                 }
                 content = spaceList.get(2).getContent();
                 if (content instanceof YourPrivateRoom.SecretBox) {
