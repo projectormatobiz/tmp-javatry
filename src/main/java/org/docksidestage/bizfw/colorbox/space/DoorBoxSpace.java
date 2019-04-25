@@ -23,9 +23,15 @@ import org.docksidestage.bizfw.colorbox.size.BoxSize;
 public class DoorBoxSpace extends BoxSpace {
 
     // ===================================================================================
+    //                                                                          Definition
+    //                                                                          ==========
+    private static final int BROKEN_DAMAGE = 3;
+
+    // ===================================================================================
     //                                                                           Attribute
     //                                                                           =========
     private boolean open;
+    private int damageCount;
 
     // ===================================================================================
     //                                                                         Constructor
@@ -34,30 +40,53 @@ public class DoorBoxSpace extends BoxSpace {
         super(size);
     }
 
+    // ===================================================================================
+    //                                                                    Content Handling
+    //                                                                    ================
     @Override
     public Object getContent() {
-        if (!isOpen()) {
-            throw new IllegalStateException("Failed to get content because of closed.");
+        if (isOpen()) {
+            return super.getContent();
+        } else {
+            damageClosedAccess();
+            return isBroken() ? super.getContent() : null;
         }
-        return super.getContent();
     }
 
     @Override
     public void setContent(Object content) {
-        if (!isOpen()) {
-            throw new IllegalStateException("Failed to get content because of closed.");
+        if (isOpen()) {
+            super.setContent(content);
+        } else {
+            damageClosedAccess();
+            if (isBroken()) {
+                super.setContent(content);
+            }
         }
-        super.setContent(content);
+    }
+
+    private void damageClosedAccess() {
+        if (!isBroken()) {
+            ++damageCount;
+        }
     }
 
     // ===================================================================================
-    //                                                                          Open/Close
-    //                                                                          ==========
+    //                                                                         Open/Broken
+    //                                                                         ===========
     public boolean isOpen() {
         return open;
     }
 
     public void openTheDoor() {
         open = true;
+    }
+
+    public void closeTheDoor() {
+        open = false;
+    }
+
+    public boolean isBroken() {
+        return damageCount >= BROKEN_DAMAGE;
     }
 }

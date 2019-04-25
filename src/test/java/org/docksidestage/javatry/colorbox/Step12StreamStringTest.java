@@ -27,13 +27,13 @@ import org.docksidestage.unit.PlainTestCase;
  * @author jflute
  * @author your_name_here
  */
-public class Step16StreamStringTest extends PlainTestCase {
+public class Step12StreamStringTest extends PlainTestCase {
 
     // ===================================================================================
     //                                                                            length()
     //                                                                            ========
     /**
-     * What is color name length of first color-box?
+     * What is color name length of first color-box? <br>
      * (最初のカラーボックスの色の名前の文字数は？)
      */
     public void test_length_basic() {
@@ -113,8 +113,8 @@ public class Step16StreamStringTest extends PlainTestCase {
     }
 
     /**
-     * What number character is starting with the late "ど" of string containing plural "ど"s in color-boxes? <br>
-     * (あなたのカラーボックスに入ってる「ど」を二つ以上含む文字列で、最後の「ど」は何文字目から始まる？)
+     * What number character is starting with the late "ど" of string containing plural "ど"s in color-boxes? (e.g. "どんどん" => 3) <br>
+     * (あなたのカラーボックスに入ってる「ど」を二つ以上含む文字列で、最後の「ど」は何文字目から始まる？ (e.g. "どんどん" => 3))
      */
     public void test_lastIndexOf_findIndex() {
     }
@@ -164,27 +164,37 @@ public class Step16StreamStringTest extends PlainTestCase {
     }
 
     // ===================================================================================
-    //                                                                           Good Luck
+    //                                                                           Challenge
     //                                                                           =========
     /**
      * What string is converted to style "map:{ key = value ; key = value ; ... }" from java.util.Map in color-boxes? <br>
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = value ; ... }" という形式で表示すると？)
      */
-    public void test_showMap() {
+    public void test_showMap_flat() {
     }
 
+    /**
+     * What string is converted to style "map:{ key = value ; key = map:{ key = value ; ... } ; ... }" from java.util.Map in color-boxes? <br>
+     * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = map:{ key = value ; ... } ; ... }" という形式で表示すると？)
+     */
+    public void test_showMap_nested() {
+    }
+
+    // ===================================================================================
+    //                                                                           Good Luck
+    //                                                                           =========
     // too difficult to be stream?
     ///**
     // * What string of toString() is converted from text of SecretBox class in upper space on the "white" color-box to java.util.Map? <br>
     // * (whiteのカラーボックスのupperスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
     // */
-    //public void test_parseMap_basic() {
+    //public void test_parseMap_flat() {
     //}
     //
     ///**
     // * What string of toString() is converted from text of SecretBox class in both middle and lower spaces on the "white" color-box to java.util.Map? <br>
     // * (whiteのカラーボックスのmiddleおよびlowerスペースに入っているSecretBoxクラスのtextをMapに変換してtoString()すると？)
     // */
-    //public void test_parseMap_deep() {
+    //public void test_parseMap_nested() {
     //}
 }

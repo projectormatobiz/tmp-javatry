@@ -98,7 +98,7 @@ public abstract class AbstractColorBox implements ColorBox {
         return size;
     }
 
-    public List<BoxSpace> getSpaceList() {
+    public List<BoxSpace> getSpaceList() { // read-only
         return spaceList;
     }
 }

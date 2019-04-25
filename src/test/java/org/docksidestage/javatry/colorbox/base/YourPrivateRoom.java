@@ -17,18 +17,26 @@ package org.docksidestage.javatry.colorbox.base;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
 import org.docksidestage.bizfw.colorbox.color.BoxColor;
 import org.docksidestage.bizfw.colorbox.impl.CompactColorBox;
+import org.docksidestage.bizfw.colorbox.impl.DoorColorBox;
 import org.docksidestage.bizfw.colorbox.impl.StandardColorBox;
 import org.docksidestage.bizfw.colorbox.size.BoxSize;
+import org.docksidestage.bizfw.colorbox.space.DoorBoxSpace;
 
 /**
  * @author jflute
@@ -47,12 +55,18 @@ public class YourPrivateRoom {
         colorBoxList.add(makeFifthColorBox());
         colorBoxList.add(makeSixthColorBox());
         colorBoxList.add(makeSeventhColorBox());
+        colorBoxList.add(makeEighthColorBox());
+        colorBoxList.add(makeNinthColorBox());
+        colorBoxList.add(makeTenthColorBox());
         return colorBoxList;
     }
 
     // ===================================================================================
     //                                                                              Making
     //                                                                              ======
+    // -----------------------------------------------------
+    //                                         First - Third
+    //                                         -------------
     private StandardColorBox makeFirstColorBox() {
         StandardColorBox colorBox = new StandardColorBox(new BoxColor("green"), new BoxSize(40, 50, 30));
         colorBox.getUpperSpace().setContent("おるぐどっくさいどすてーじ");
@@ -64,7 +78,7 @@ public class YourPrivateRoom {
     private StandardColorBox makeSecondColorBox() {
         StandardColorBox colorBox = new StandardColorBox(new BoxColor("red"), new BoxSize(50, 30, 40));
         colorBox.getUpperSpace().setContent(806);
-        colorBox.getMiddleSpace().setContent(54);
+        colorBox.getMiddleSpace().setContent(54L);
         colorBox.getLowerSpace().setContent("Waterfront");
         return colorBox;
     }
@@ -73,29 +87,36 @@ public class YourPrivateRoom {
         CompactColorBox colorBox = new CompactColorBox(new BoxColor("blue"), new BoxSize(50, 30, 40));
         colorBox.getUpperSpace().setContent(new File("/tmp/javatry/docksidestage.txt"));
         Map<String, Integer> map = new LinkedHashMap<String, Integer>();
-
-        // when 2019/04/15
-        map.put("1-Day Passport", 7400);
+        map.put("1-Day Passport", 7400); // these are when 2019/04/15
+        map.put("Starlight Passport", 5400);
         map.put("After 6 Passport", 4200);
         map.put("2-Day Passport", 13200);
+        map.put("3-Day Magic Passport", 17800);
+        map.put("4-Day Magic Passport", 22400);
         map.put("Land Annual Passport", 61000);
         map.put("Sea Annual Passport", 61000);
-        map.put("2-Park Annual Passport", 89000);
-
+        // trap for plural top
+        //map.put("2-Park Annual Passport", 89000);
+        map.put("Group Passport", 6700);
         colorBox.getLowerSpace().setContent(map);
         return colorBox;
     }
 
+    // -----------------------------------------------------
+    //                                        Fourth - Sixth
+    //                                        --------------
     private StandardColorBox makeFourthColorBox() {
         StandardColorBox colorBox = new StandardColorBox(new BoxColor("yellow"), new BoxSize(40, 50, 30));
         colorBox.getUpperSpace().setContent(LocalDateTime.of(1983, 4, 15, 23, 59, 59));
         colorBox.getMiddleSpace().setContent(LocalDate.of(2001, 9, 4));
-        List<BigDecimal> decimalList = new ArrayList<BigDecimal>();
+        List<Number> decimalList = new ArrayList<Number>();
         decimalList.add(new BigDecimal(2));
         decimalList.add(new BigDecimal("3.14159"));
         decimalList.add(new BigDecimal("4.753"));
         decimalList.add(new BigDecimal("2.0"));
         decimalList.add(new BigDecimal("1.4"));
+        decimalList.add(24.8);
+        decimalList.add(new BigInteger("1234567890"));
         colorBox.getLowerSpace().setContent(decimalList);
         return colorBox;
     }
@@ -123,17 +144,79 @@ public class YourPrivateRoom {
         return colorBox;
     }
 
-    private CompactColorBox makeSeventhColorBox() {
-        CompactColorBox colorBox = new CompactColorBox(new BoxColor("purple"), new BoxSize(50, 30, 40));
+    // -----------------------------------------------------
+    //                                         Seventh - ...
+    //                                         -------------
+    private StandardColorBox makeSeventhColorBox() {
+        StandardColorBox colorBox = new StandardColorBox(new BoxColor("purple"), new BoxSize(50, 30, 40));
         colorBox.getUpperSpace().setContent(true);
-        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        {
+            Map<String, Object> middleMap = new LinkedHashMap<String, Object>();
+            Map<String, Object> seaMap = new LinkedHashMap<String, Object>();
+            seaMap.put("dockside", Arrays.asList("over", "table", "hello"));
+            seaMap.put("hanger", Arrays.asList("mystic", "shadow", "mirage"));
+            Map<String, String> harborMap = new LinkedHashMap<String, String>();
+            harborMap.put("spring", "fashion"); // these are when 2018
+            harborMap.put("summer", "pirates");
+            harborMap.put("autumn", "vi");
+            harborMap.put("winter", "jazz");
+            seaMap.put("harbor", harborMap);
+            middleMap.put("sea", seaMap);
+            Map<String, List<String>> landMap = new LinkedHashMap<String, List<String>>();
+            landMap.put("orleans", Arrays.asList("oh", "party"));
+            landMap.put("showbase", Arrays.asList("oneman"));
+            middleMap.put("land", landMap);
+            colorBox.getMiddleSpace().setContent(middleMap);
+        }
+        {
+            Map<String, Object> lowerMap = new LinkedHashMap<String, Object>();
+            lowerMap.put("Small Coin Locker", 300); // these are when 2019/04/15
+            lowerMap.put("Resort Line", 250);
+            lowerMap.put("Cinema Piari", "1800"); // trap
+            lowerMap.put("Middle Coin Locker", "4O0"); // more trap
+            colorBox.getLowerSpace().setContent(lowerMap);
+        }
+        return colorBox;
+    }
 
-        // when 2019/04/15
-        map.put("Small Coin Locker", 300);
-        map.put("Resort Line", 250);
-        map.put("Cinema Piari", "1800"); // trap
+    private StandardColorBox makeEighthColorBox() { // duplicate color here
+        StandardColorBox colorBox = new StandardColorBox(new BoxColor("yellow"), new BoxSize(30, 50, 40));
+        Set<String> set = new HashSet<String>();
+        set.add("2019/04/22");
+        set.add("2O19/04/22"); // super trap
+        colorBox.getUpperSpace().setContent(set);
+        colorBox.getMiddleSpace().setContent(new BittersweetMemorableException("nullsidestage", doyoulikeNullPointer()));
+        colorBox.getLowerSpace().setContent((FavoriteProvider) () -> "mystic");
+        return colorBox;
+    }
 
-        colorBox.getLowerSpace().setContent(map);
+    private NullPointerException doyoulikeNullPointer() {
+        return new NullPointerException("Oh, yes");
+    }
+
+    private CompactColorBox makeNinthColorBox() {
+        CompactColorBox colorBox = new CompactColorBox(new BoxColor("beige"), new BoxSize(50, 40, 30));
+        colorBox.getUpperSpace().setContent(54.3); // trap
+        List<BoxedResort> resortList = new ArrayList<>();
+        resortList.add(new BoxedResort("nullhama", null));
+        resortList.add(new BoxedResort("nullsea", new BoxedPark("sea", null)));
+        resortList.add(new BoxedResort("nullside", new BoxedPark("sea", new BoxedStage("dockside", null))));
+        resortList.add(new BoxedResort("maihama", new BoxedPark("sea", new BoxedStage("dockside", "dream cruise"))));
+        colorBox.getLowerSpace().setContent(resortList);
+        return colorBox;
+    }
+
+    private DoorColorBox makeTenthColorBox() {
+        DoorColorBox colorBox = new DoorColorBox(new BoxColor("grey"), new BoxSize(50, 40, 30));
+        for (DoorBoxSpace boxSpace : colorBox.getDoorSpaceList()) {
+            boxSpace.openTheDoor();
+        }
+        colorBox.getUpperSpace().setContent(LocalTime.of(12, 48, 24));
+        colorBox.getMiddleSpace().setContent(null); // spare
+        colorBox.getLowerSpace().setContent(null); // spare
+        for (DoorBoxSpace boxSpace : colorBox.getDoorSpaceList()) {
+            boxSpace.closeTheDoor();
+        }
         return colorBox;
     }
 
@@ -236,6 +319,115 @@ public class YourPrivateRoom {
 
         public DevilBoxTextNotFoundException(String msg) {
             super(msg);
+        }
+    }
+
+    // ===================================================================================
+    //                                                                           Exception
+    //                                                                           =========
+    public static class BittersweetMemorableException extends RuntimeException {
+
+        private static final long serialVersionUID = 1L;
+
+        public BittersweetMemorableException(String msg) {
+            super(msg);
+        }
+
+        public BittersweetMemorableException(String msg, Throwable cause) {
+            super(msg, cause);
+        }
+
+        @Override
+        public String toString() {
+            return "{bitter...}"; // to be closet
+        }
+    }
+
+    // ===================================================================================
+    //                                                                           Interface
+    //                                                                           =========
+    @FunctionalInterface
+    public static interface FavoriteProvider {
+
+        String justHere();
+
+        default String notHere() {
+            throw new BittersweetMemorableException("No no no no no...");
+        }
+    }
+
+    // ===================================================================================
+    //                                                                           Interface
+    //                                                                           =========
+    public static class BoxedResort {
+
+        private final String region; // not null
+        private BoxedPark park; // null allowed
+
+        public BoxedResort(String region, BoxedPark park) {
+            this.region = region;
+            this.park = park;
+        }
+
+        @Override
+        public String toString() {
+            return "{" + region + ", " + park + "}";
+        }
+
+        public String getRegion() {
+            return region;
+        }
+
+        public Optional<BoxedPark> getPark() {
+            return Optional.ofNullable(park);
+        }
+    }
+
+    public static class BoxedPark {
+
+        private final String theme; // not null
+        private BoxedStage stage; // null allowed
+
+        public BoxedPark(String theme, BoxedStage stage) {
+            this.theme = theme;
+            this.stage = stage;
+        }
+
+        @Override
+        public String toString() {
+            return "{" + theme + ", " + stage + "}";
+        }
+
+        public String getTheme() {
+            return theme;
+        }
+
+        public Optional<BoxedStage> getStage() {
+            return Optional.ofNullable(stage);
+        }
+    }
+
+    public static class BoxedStage {
+
+        private final String showName; // not null
+        private String keyword; // null allowed
+
+        public BoxedStage(String showName, String keyword) {
+            this.showName = showName;
+            this.keyword = keyword;
+        }
+
+        @Override
+        public String toString() {
+            return "{" + showName + ", " + keyword + "}";
+        }
+
+        public String getShowName() {
+            return showName;
+        }
+
+        public String getKeyword() {
+            return keyword;
         }
     }
 }

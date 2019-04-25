@@ -15,6 +15,7 @@
  */
 package org.docksidestage.bizfw.colorbox.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.docksidestage.bizfw.colorbox.AbstractColorBox;
@@ -26,12 +27,19 @@ import org.docksidestage.bizfw.colorbox.space.BoxSpace;
  */
 public class FlexibleColorBox extends AbstractColorBox {
 
+    private final CompactColorBox compactColorBox; // not null
+
     public FlexibleColorBox(BoxColor color, CompactColorBox compactColorBox) {
         super(color);
-        List<BoxSpace> spaceList = compactColorBox.getSpaceList();
-        for (BoxSpace space : spaceList) {
-            addSpace(space);
-        }
+        this.compactColorBox = compactColorBox;
+    }
+
+    @Override
+    public List<BoxSpace> getSpaceList() {
+        List<BoxSpace> mergedList = new ArrayList<>();
+        mergedList.addAll(super.getSpaceList());
+        mergedList.addAll(compactColorBox.getSpaceList());
+        return mergedList;
     }
 
     @Override
