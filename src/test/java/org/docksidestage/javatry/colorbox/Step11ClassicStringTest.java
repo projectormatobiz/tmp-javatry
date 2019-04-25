@@ -116,25 +116,25 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_length_findSecondMax() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String maxString = "";
-        String secondString = "";
+        String maxString = "", secondString = "", currentString = "";
+        int currentLength = 0;
         for (ColorBox box : colorBoxList) {
             List<BoxSpace> spaceList = box.getSpaceList();
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
-                int currentLength = 0;
-                if (content != null)
-                    currentLength = content.toString().length();
-                //                log(content);
-                //                log(currentLength);
+                if (content != null){
+                    currentString = content.toString();
+                    currentLength = currentString.length();
+                }
                 if (maxString.length() < currentLength) {
-                    maxString = content.toString();
+                    secondString = maxString;
+                    maxString = currentString;
                 } else if (secondString.length() < currentLength) {
-                    secondString = content.toString();
+                    secondString = currentString;
                 }
             }
         }
-        log(secondString, secondString.length());
+        log(!secondString.equals("") ? secondString : "not found second max string.");
     }
 
     /**
@@ -153,7 +153,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 }
             }
         }
-        log(answer != 0 ? answer : "not found color-box");
+        log(answer != 0 ? answer : "not lengths of strings in color-boxes");
 
     }
 
@@ -165,12 +165,13 @@ public class Step11ClassicStringTest extends PlainTestCase {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         String answer = null;
         for (ColorBox colorBox : colorBoxList) {
-            int currentNameLength = colorBox.getColor().getColorName().length();
-            if (answer == null || answer.length() < currentNameLength) {
-                answer = colorBox.getColor().getColorName();
+            String currentColorName = colorBox.getColor().getColorName();
+            int currentColorNameLength = currentColorName.length();
+            if (answer == null || answer.length() < currentColorNameLength) {
+                answer = currentColorName;
             }
         }
-        log(answer);
+        log(answer != null ? answer : "not found color in color-boxes.");
     }
 
     // ===================================================================================
@@ -183,18 +184,19 @@ public class Step11ClassicStringTest extends PlainTestCase {
     public void test_startsWith_findFirstWord() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         String answer = "";
-        for (ColorBox box : colorBoxList) {
+        listloop: for (ColorBox box : colorBoxList) {
             List<BoxSpace> spaceList = box.getSpaceList();
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof String) {
                     if (((String) content).startsWith("Water")) {
                         answer = box.getColor().getColorName();
+                        break listloop;
                     }
                 }
             }
         }
-        log(!answer.equals("") ? answer : "not found color-box");
+        log(!answer.equals("") ? answer : "not found start with Water.");
     }
 
     /**
@@ -215,7 +217,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 }
             }
         }
-        log(!answer.equals("") ? answer : "not found color-box");
+        log(!answer.equals("") ? answer : "not found end with front.");
 
     }
 
@@ -234,13 +236,14 @@ public class Step11ClassicStringTest extends PlainTestCase {
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof String) {
-                    if (((String) content).endsWith("front")) {
-                        answer = ((String) content).indexOf("front");
+                    String currentName = (String) content;
+                    if (currentName.endsWith("front")) {
+                        answer = currentName.indexOf("front") + 1;
                     }
                 }
             }
         }
-        log(answer != 0 ? answer : "not found color-box");
+        log(answer != 0 ? answer : "not found end with front.");
 
     }
 
@@ -250,19 +253,33 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_lastIndexOf_findIndex() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        int answer = 0;
+        final int BORDER = 2; //enumで定義したほうがいいらしい
+        int answer = -1, count = 0;
         for (ColorBox box : colorBoxList) {
             List<BoxSpace> spaceList = box.getSpaceList();
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof String) {
-                    if (((String) content).indexOf("ど", ((String) content).indexOf("ど")) != -1) {
-                        answer = ((String) content).lastIndexOf("ど");
+                    String contentName = (String)content;
+                    for (int i = 0; i < contentName.length(); i ++) {
+                        if (contentName.charAt(i) == 'ど'){
+                            count += 1;
+                        }
                     }
+//                    This is simple, but not scalable.
+//                    answer = contentName.indexOf("ど", contentName.indexOf("ど")) != -1) {
+//                        contentName.lastIndexOf("ど") + 1;
+//                    }
+                    if (BORDER <= count) {
+                        answer = contentName.lastIndexOf("ど") + 1;
+                        // 全部出すならコメントアウトを外す
+                        log(answer);
+                    }
+                    count = 0;
                 }
             }
         }
-        log(answer != 0 ? answer : "not found color-box");
+        log(answer != -1 ? answer : "not found color-box");
 
     }
 
@@ -281,8 +298,9 @@ public class Step11ClassicStringTest extends PlainTestCase {
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof String) {
-                    if (((String) content).endsWith("front")) {
-                        answer = ((String) content).substring(0, 1);
+                    String contentName = (String) content;
+                    if (contentName.endsWith("front")) {
+                        answer = contentName.substring(0, 1);
                     }
                 }
             }
@@ -302,8 +320,9 @@ public class Step11ClassicStringTest extends PlainTestCase {
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof String) {
-                    if (((String) content).startsWith("Water")) {
-                        answer = ((String) content).substring(((String) content).length() - 1, ((String) content).length());
+                    String contentName = (String) content;
+                    if (contentName.startsWith("Water")) {
+                        answer = contentName.substring(contentName.length() - 1);
                     }
                 }
             }
@@ -341,17 +360,17 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_replace_fileseparator() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String answer = "";
+        StringBuilder answer = new StringBuilder("C:");
         for (ColorBox box : colorBoxList) {
             List<BoxSpace> spaceList = box.getSpaceList();
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof File) {
-                    answer = content.toString().replaceFirst("/", "C:");
+                    answer.append(((File) content).getPath().replaceAll("/", "\\\\")); //キレそう
                 }
             }
         }
-        log(!answer.equals("") ? answer : "not found color-box");
+        log(!answer.toString().equals("") ? answer.toString() : "not found file in color box.");
 
     }
 
@@ -371,11 +390,10 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 Object content = boxSpace.getContent();
                 if (content instanceof YourPrivateRoom.DevilBox) {
                     answer += content.toString().length();
-
                 }
             }
         }
-        log(answer != 0 ? answer : "not found color-box");
+        log(answer != 0 ? answer : "not found devil-boxes");
     }
 
     // ===================================================================================
@@ -390,7 +408,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public Map StringToMap(String string) throws IOException {
         BufferedReader reader = new BufferedReader(new StringReader(string));
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         String line;
         while ((line = reader.readLine()) != null) {
             int index = line.indexOf("=");
@@ -421,6 +439,7 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 }
             }
         }
+        //全部まとめたのを表示したかったらコメント外す
         log(answer);
     }
 
@@ -429,6 +448,20 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = map:{ key = value ; ... } ; ... }" という形式で表示すると？)
      */
     public void test_showMap_nested() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        Map<String, Integer> answer = new HashMap<String, Integer>();
+        for (ColorBox box : colorBoxList) {
+            List<BoxSpace> spaceList = box.getSpaceList();
+            for (BoxSpace boxSpace : spaceList) {
+                Object content = boxSpace.getContent();
+                if (content instanceof Map) {
+                    log("map:" + content);
+                    answer.putAll((Map) content);
+                }
+            }
+        }
+        //全部まとめたのを表示したかったらコメント外す
+        log(answer);
     }
 
     // ===================================================================================
@@ -448,10 +481,10 @@ public class Step11ClassicStringTest extends PlainTestCase {
                 if (content instanceof YourPrivateRoom.SecretBox) {
                     String currnet = ((YourPrivateRoom.SecretBox) content).getText();
                     //正規表現で{}消す
-                    currnet = currnet.replaceFirst("map:", "");
+                    currnet = currnet.replaceFirst("map:", "").replaceAll("[{|}]", "");
+                    log(currnet);
                     answer = StringToMap(currnet);
-                    log(answer);
-
+                    log(answer.toString());
                 }
             }
         }
@@ -464,25 +497,21 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_parseMap_nested() throws IOException {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        Map<String, Integer> answer = new HashMap<String, Integer>();
+        Map<String, String> answer = new HashMap<>();
         for (ColorBox box : colorBoxList) {
             if (box.getColor().getColorName().equals("white")) {
                 List<BoxSpace> spaceList = box.getSpaceList();
-                Object content = spaceList.get(1).getContent();
-                if (content instanceof YourPrivateRoom.SecretBox) {
-                    log(((YourPrivateRoom.SecretBox) content).getText());
-                    String currnet = ((YourPrivateRoom.SecretBox) content).getText();
-                    currnet = currnet.replaceFirst("map:", "");
-                    log(currnet);
-                    answer = StringToMap(currnet);
-                    log(answer);
-                }
-                content = spaceList.get(2).getContent();
-                if (content instanceof YourPrivateRoom.SecretBox) {
-                    log(((YourPrivateRoom.SecretBox) content).getText());
+                for(int i = 1; i < 3; i++) {
+                    Object content = spaceList.get(i).getContent();
+                    if (content instanceof YourPrivateRoom.SecretBox) {
+                        String currnet = ((YourPrivateRoom.SecretBox) content).getText();
+                        currnet = currnet.replaceAll("map:", "");
+                        answer.putAll(StringToMap(currnet));
+                        log(answer);
+                    }
                 }
             }
         }
     }
-    
+
 }
