@@ -16,6 +16,7 @@
 package org.docksidestage.javatry.colorbox;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
 import org.docksidestage.javatry.colorbox.base.YourPrivateRoom;
@@ -55,6 +56,17 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる文字列の中で、一番長い文字列は？)
      */
     public void test_length_findMax() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String answer = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> String.valueOf(content.getContent()))
+                .reduce((ans, taeget) -> {
+                    return ans.length() < taeget.length() ? taeget : ans;
+                })
+                .orElse("not found");
+
+        log(answer);
     }
 
     /**
@@ -62,6 +74,18 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる文字列の中で、一番長いものと短いものの差は何文字？)
      */
     public void test_length_findMaxMinDiff() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String answer = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> String.valueOf(content.getContent()))
+                .reduce((ans, taeget) -> {
+                    return ans.length() < taeget.length() ? taeget : ans;
+                })
+                .orElse("not found");
+
+        log(answer);
+
     }
 
     /**
