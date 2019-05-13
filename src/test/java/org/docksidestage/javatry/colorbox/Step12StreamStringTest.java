@@ -16,6 +16,7 @@
 package org.docksidestage.javatry.colorbox;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
@@ -61,8 +62,10 @@ public class Step12StreamStringTest extends PlainTestCase {
                 .flatMap(spaceList -> spaceList.getSpaceList().stream())
                 .filter(strContent -> strContent.getContent() instanceof String)
                 .map(content -> String.valueOf(content.getContent()))
-                .reduce((ans, taeget) -> {
-                    return ans.length() < taeget.length() ? taeget : ans;
+                // これってどっちがいいの？
+//                .max((v1, v2) -> Integer.compare(v1.length(), v2.length()))
+                .reduce((ans, target) -> {
+                    return ans.length() < target.length() ? target : ans;
                 })
                 .orElse("not found");
 
@@ -75,17 +78,24 @@ public class Step12StreamStringTest extends PlainTestCase {
      */
     public void test_length_findMaxMinDiff() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String answer = colorBoxList.stream()
+        // TODO:もっと良い処理を知りたい
+        // Streamは使い回し出来ないみたいなので、中間処置してから、一度普通のオブジェクトに落とし込んで、もっかいStreamし始めるとか
+        List<String> strAll = colorBoxList.stream()
                 .flatMap(spaceList -> spaceList.getSpaceList().stream())
                 .filter(strContent -> strContent.getContent() instanceof String)
                 .map(content -> String.valueOf(content.getContent()))
-                .reduce((ans, taeget) -> {
-                    return ans.length() < taeget.length() ? taeget : ans;
+                .collect(Collectors.toList());
+        String longest = strAll.stream()
+                .reduce((ans, target) -> {
+                    return ans.length() > target.length() ? ans : target;
                 })
                 .orElse("not found");
-
-        log(answer);
-
+        String shortest = strAll.stream()
+                .reduce((ans, target) -> {
+                    return ans.length() < target.length() ? ans : target;
+                })
+                .orElse("not found");
+        log(longest.length() - shortest.length());
     }
 
     /**
@@ -93,6 +103,20 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる値 (文字列以外はtoString()) の中で、二番目に長い文字列は？ (ソートなしで))
      */
     public void test_length_findSecondMax() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String secondLengthValue = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .map(content -> content.getContent().toString())
+                .reduce((ans, target) -> {
+                    ans = "a";
+                    String a = "a";
+                    if (true) {
+                        return ans.length() > target.length() ? ans : target;
+                    }
+                    return "a";
+                })
+                .orElse("not found second length value.");
+
     }
 
     /**
