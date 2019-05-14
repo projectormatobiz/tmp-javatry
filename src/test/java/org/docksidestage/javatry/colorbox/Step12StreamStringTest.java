@@ -15,11 +15,13 @@
  */
 package org.docksidestage.javatry.colorbox;
 
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
+import org.docksidestage.bizfw.colorbox.space.BoxSpace;
 import org.docksidestage.javatry.colorbox.base.YourPrivateRoom;
 import org.docksidestage.unit.PlainTestCase;
 
@@ -39,11 +41,17 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (最初のカラーボックスの色の名前の文字数は？)
      */
     public void test_length_basic() {
+        // Listを同じように取得する。
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        // streamを作る
         String answer = colorBoxList.stream()
+                // 最初の一つを返す
                 .findFirst()
+                // 全体をBoxColorにする
                 .map(colorBox -> colorBox.getColor()) // consciously split as example
+                // さらにそこからStringにする
                 .map(boxColor -> boxColor.getColorName())
+                // 長さを返す
                 .map(colorName -> {
                     log(colorName); // for visual check
                     return String.valueOf(colorName.length());
@@ -103,17 +111,20 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる値 (文字列以外はtoString()) の中で、二番目に長い文字列は？ (ソートなしで))
      */
     public void test_length_findSecondMax() {
+        // よく分からなくなったので、一旦飛ばします
+        String max = "";
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
         String secondLengthValue = colorBoxList.stream()
                 .flatMap(spaceList -> spaceList.getSpaceList().stream())
                 .map(content -> content.getContent().toString())
                 .reduce((ans, target) -> {
-                    ans = "a";
-                    String a = "a";
-                    if (true) {
-                        return ans.length() > target.length() ? ans : target;
-                    }
-                    return "a";
+                    // 本当にこれでいいんだろうか
+//                    if (target.length() >= max.length()) {
+//                        max = target;
+//                    }else {
+//
+//                    }
+                    return ans;
                 })
                 .orElse("not found second length value.");
 
@@ -124,6 +135,17 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる文字列の長さの合計は？)
      */
     public void test_length_calculateLengthSum() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        int ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> content.getContent().toString().length())
+                .reduce((sum, value) -> {
+                    return sum += value;
+                })
+                .orElse(-1);
+        log(ans != -1 ? ans : "not found color box.");
+
     }
 
     /**
@@ -131,6 +153,14 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスの中で、色の名前が一番長いものは？)
      */
     public void test_length_findMaxColorSize() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String ans = colorBoxList.stream()
+                .map(colorList -> colorList.getColor().getColorName())
+                .reduce((max, value) -> {
+                    return max.length() >= value.length() ? max : value;
+                })
+                .orElse("not found color box.");
+        log(ans);
     }
 
     // ===================================================================================
@@ -141,6 +171,13 @@ public class Step12StreamStringTest extends PlainTestCase {
      * ("Water" で始まる文字列をしまっているカラーボックスの色は？)
      */
     public void test_startsWith_findFirstWord() {
+        //mapすると情報が失われる気がするのでfilterで取得する
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+//        String ans = colorBoxList.stream()
+//                .filter(strContent -> strContent. instanceof String)
+//                .filter(startWithWaterContent -> startWithWaterContent.toString().startsWith("Water"))
+//                .map(ansStr -> ansStr.getC)
+//        log(ans);
     }
 
     /**
