@@ -173,9 +173,27 @@ public class Step12StreamStringTest extends PlainTestCase {
     public void test_startsWith_findFirstWord() {
         //mapすると情報が失われる気がするのでfilterで取得する
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-//        String ans = colorBoxList.stream()
-//                .filter(strContent -> strContent. instanceof String)
+        BoxSpace ans = colorBoxList.stream()
+                // mapの中で全部やっちゃう作戦
+                .map(spaceList -> spaceList.getSpaceList().stream()
+                .filter(target -> b.getContent())
+
+
+                )
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .filter(target -> String.valueOf(target).startsWith("Water"))
+                .findFirst()
+//                .map(content -> String.valueOf(content.getContent()))
+//                .filter(target -> target.startsWith("Water"))
+//                .findFirst()
+                .orElse("not found color box");
+        log(ans.);
+//                .map(content -> content.getSpaceList())
+//                .filter(strContent -> strContent.toString() instanceof String)
 //                .filter(startWithWaterContent -> startWithWaterContent.toString().startsWith("Water"))
+//                .findFirst()
+//                .orElse("not found color box");
 //                .map(ansStr -> ansStr.getC)
 //        log(ans);
     }
