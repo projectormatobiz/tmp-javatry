@@ -16,7 +16,10 @@
 package org.docksidestage.javatry.colorbox;
 
 import java.awt.*;
+import java.io.File;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -118,6 +121,7 @@ public class Step12StreamStringTest extends PlainTestCase {
                 .flatMap(spaceList -> spaceList.getSpaceList().stream())
                 .map(content -> content.getContent().toString())
                 .reduce((ans, target) -> {
+
                     // 本当にこれでいいんだろうか
 //                    if (target.length() >= max.length()) {
 //                        max = target;
@@ -173,29 +177,15 @@ public class Step12StreamStringTest extends PlainTestCase {
     public void test_startsWith_findFirstWord() {
         //mapすると情報が失われる気がするのでfilterで取得する
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        BoxSpace ans = colorBoxList.stream()
-                // mapの中で全部やっちゃう作戦
-                .map(spaceList -> spaceList.getSpaceList().stream()
-                .filter(target -> b.getContent())
+        ColorBox ans = colorBoxList.stream()
+                .filter(target -> target.getSpaceList().stream()
+                        .filter(content -> content.getContent() instanceof String)
+                        .map(a -> String.valueOf(a.getContent()))
+                        // ここのfindしてるところ大丈夫かな
+                        .findAny().orElse("").startsWith("Water")
+                ).findFirst().orElse(null);
+        log(ans != null ? ans.getColor().getColorName() : "not found box.");
 
-
-                )
-                .flatMap(spaceList -> spaceList.getSpaceList().stream())
-                .filter(strContent -> strContent.getContent() instanceof String)
-                .filter(target -> String.valueOf(target).startsWith("Water"))
-                .findFirst()
-//                .map(content -> String.valueOf(content.getContent()))
-//                .filter(target -> target.startsWith("Water"))
-//                .findFirst()
-                .orElse("not found color box");
-        log(ans.);
-//                .map(content -> content.getSpaceList())
-//                .filter(strContent -> strContent.toString() instanceof String)
-//                .filter(startWithWaterContent -> startWithWaterContent.toString().startsWith("Water"))
-//                .findFirst()
-//                .orElse("not found color box");
-//                .map(ansStr -> ansStr.getC)
-//        log(ans);
     }
 
     /**
@@ -203,6 +193,15 @@ public class Step12StreamStringTest extends PlainTestCase {
      * ("front" で終わる文字列をしまっているカラーボックスの色は？)
      */
     public void test_endsWith_findLastWord() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        ColorBox ans = colorBoxList.stream()
+                .filter(target -> target.getSpaceList().stream()
+                        .filter(content -> content.getContent() instanceof String)
+                        .map(a -> String.valueOf(a.getContent()))
+                        // ここのfindしてるところ大丈夫かな
+                        .findAny().orElse("").endsWith("front")
+                ).findFirst().orElse(null);
+        log(ans != null ? ans.getColor().getColorName() : "not found box.");
     }
 
     // ===================================================================================
@@ -213,13 +212,30 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (あなたのカラーボックスに入ってる "front" で終わる文字列で、"front" は何文字目から始まる？)
      */
     public void test_indexOf_findIndex() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> String.valueOf(content.getContent()))
+                .filter(target -> target.endsWith("front"))
+                .findFirst()
+                .orElse("");
+        log(!ans.equals("") ? ans.indexOf("front")+1 : "not found color box.");
     }
 
     /**
      * What number character is starting with the late "ど" of string containing plural "ど"s in color-boxes? (e.g. "どんどん" => 3) <br>
      * (あなたのカラーボックスに入ってる「ど」を二つ以上含む文字列で、最後の「ど」は何文字目から始まる？ (e.g. "どんどん" => 3))
      */
-    public void test_lastIndexOf_findIndex() {
+    public void test_lastIndexOf_findIndex() {List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> String.valueOf(content.getContent()))
+                .filter(target -> target.indexOf("ど", target.indexOf("ど")) != 0)
+                .findFirst()
+                .orElse("");
+        log(!ans.equals("") ? ans.lastIndexOf("ど")+1 : "not found color box.");
     }
 
     // ===================================================================================
@@ -230,6 +246,16 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる "front" で終わる文字列の最初の一文字は？)
      */
     public void test_substring_findFirstChar() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> String.valueOf(content.getContent()))
+                .filter(target -> target.endsWith("front"))
+                .findFirst()
+                .orElse("");
+        // これで良いのかな？stream内でやらなくていいのかな
+        log(!ans.equals("") ? ans.substring(0, 1) : "not found color box.");
     }
 
     /**
@@ -237,6 +263,16 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる "Water" で始まる文字列の最後の一文字は？)
      */
     public void test_substring_findLastChar() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> String.valueOf(content.getContent()))
+                .filter(target -> target.startsWith("Water"))
+                .findFirst()
+                .orElse("");
+        // これで良いのかな？stream内でやらなくていいのかな
+        log(!ans.equals("") ? ans.substring(ans.length()-1) : "not found color box.");
     }
 
     // ===================================================================================
@@ -247,6 +283,19 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスに入ってる "o" (おー) を含んだ文字列から "o" を全て除去したら何文字？)
      */
     public void test_replace_remove_o() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        String ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof String)
+                .map(content -> String.valueOf(content.getContent()))
+                .filter(target -> target.indexOf("o") != 0)
+                .reduce((sum, target) -> {
+                    sum += target.replaceAll("o", "");
+                    return sum;
+                })
+                .orElse("");
+        // これで良いのかな？stream内でやらなくていいのかな
+        log(!ans.equals("") ? ans.length() : "not found color box.");
     }
 
     /**
@@ -254,6 +303,16 @@ public class Step12StreamStringTest extends PlainTestCase {
      * カラーボックスに入ってる java.io.File のパス文字列のファイルセパレーターの "/" を、Windowsのファイルセパレーターに置き換えた文字列は？
      */
     public void test_replace_fileseparator() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        List<String> ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .filter(strContent -> strContent.getContent() instanceof File)
+                .map(content -> (File)content.getContent())
+                .map(replace -> replace.getPath().replaceAll("/", "\\\\"))
+                .collect(Collectors.toList());
+        // やっつけかんすごい
+        ans.forEach(res -> System.out.println("C:" + res));
+//        log(!ans.equals("") ? ans.length() : "not found color box.");
     }
 
     // ===================================================================================
@@ -264,6 +323,19 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスの中に入っているDevilBoxクラスのtextの長さの合計は？)
      */
     public void test_welcomeToDevil() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        int ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .map(content -> content.getContent())
+                .filter(devil -> devil instanceof YourPrivateRoom.DevilBox)
+                .map(devilLength -> devilLength.toString().length())
+                .reduce((sum, target) -> {
+                    return sum += target;
+                })
+                .orElse(-1);
+        // これで良いのかな？stream内でやらなくていいのかな
+        log(ans != -1 ? ans : "not found color box.");
+
     }
 
     // ===================================================================================
@@ -274,6 +346,16 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = value ; ... }" という形式で表示すると？)
      */
     public void test_showMap_flat() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        List<Map> ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .map(content -> content.getContent())
+                .filter(target -> target instanceof Map)
+                .map(mapContent -> (Map)mapContent)
+                .collect(Collectors.toList());
+        for (Map an : ans) {
+            log("map:" + an);
+        }
     }
 
     /**
@@ -281,6 +363,17 @@ public class Step12StreamStringTest extends PlainTestCase {
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = map:{ key = value ; ... } ; ... }" という形式で表示すると？)
      */
     public void test_showMap_nested() {
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        List<Map> ans = colorBoxList.stream()
+                .flatMap(spaceList -> spaceList.getSpaceList().stream())
+                .map(content -> content.getContent())
+                .filter(target -> target instanceof Map)
+                .map(mapContent -> (Map)mapContent)
+                .collect(Collectors.toList());
+        //
+        for (Map an : ans) {
+            log("map:" + an);
+        }
     }
 
     // ===================================================================================
